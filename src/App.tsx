@@ -1,4 +1,4 @@
-import { Component, createSignal, For, Show } from 'solid-js';
+import { Component, createEffect, createSignal, For, Show } from 'solid-js';
 import { createStore } from "solid-js/store";
 import { FaRegularCircleDot, FaRegularCircle } from 'solid-icons/fa'
 
@@ -13,10 +13,6 @@ function shuffle(a: Array<Partial<Question>>): Array<Partial<Question>> {
 }
 
 const questions = parseHTML()
-
-function shuffleQuestions(num: number) {
-  return setQuizQuestions(shuffle(questions).slice(0, num))
-}
 
 const [numOfQuestions, setNumOfQuestions] = createSignal<number>(5)
 const [quizQuestions, setQuizQuestions] = createStore<Partial<Question>[]>(shuffle(questions).slice(0, numOfQuestions()))
@@ -61,6 +57,9 @@ function computeResult() {
 }
 
 const App: Component = () => {
+  createEffect(() => {
+    setQuizQuestions(shuffle(questions).slice(0, numOfQuestions()))
+  })
 
   return (
     <div class="bg-slate-800 text-white ">
@@ -78,10 +77,7 @@ const App: Component = () => {
                 <Show when={numOfQuestions() !== num}>
                   <FaRegularCircle
                     class="hover:cursor-pointer"
-                    onClick={() => {
-                      setNumOfQuestions(num)
-                      shuffleQuestions(num)
-                    }} />
+                    onClick={() => setNumOfQuestions(num)} />
                 </Show>
               </div>
             )}
