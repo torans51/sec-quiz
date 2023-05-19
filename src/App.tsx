@@ -18,7 +18,7 @@ function shuffleQuestions(num: number) {
   return setQuizQuestions(shuffle(questions).slice(0, num))
 }
 
-const [numOfQuestions, setNumOfQuestions] = createSignal<number>(10)
+const [numOfQuestions, setNumOfQuestions] = createSignal<number>(5)
 const [quizQuestions, setQuizQuestions] = createStore<Partial<Question>[]>(shuffle(questions).slice(0, numOfQuestions()))
 // key questionId, value selectedChoiceId
 const [answers, setAnswer] = createStore<Record<number, number>>({})
@@ -70,7 +70,7 @@ const App: Component = () => {
 
         <div class="text-xl px-3 py-5 flex gap-4 items-center">
           <p>Numero di domande :</p>
-          <For each={[10, 20, 30, 40, 50]}>
+          <For each={[5, 10, 20, 30, 40, 50]}>
             {(num) => (
               <div class="flex gap-2 items-center">
                 {num}
