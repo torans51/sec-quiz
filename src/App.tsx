@@ -4,8 +4,6 @@ import { FaRegularCircleDot, FaRegularCircle } from 'solid-icons/fa'
 
 import { parseHTML, Question } from './quiz/parser';
 
-// import styles from './App.module.css';
-
 function shuffle(a: Array<Partial<Question>>): Array<Partial<Question>> {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
