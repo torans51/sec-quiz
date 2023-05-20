@@ -62,26 +62,27 @@ const App: Component = () => {
   })
 
   return (
-    <div class="bg-slate-800 text-white ">
-
+    <div class="bg-slate-800 text-white">
       <div class="md:container md:mx-auto p-4">
         <div class="text-3xl px-3 py-6">Test sulla sicurezza sul lavoro</div>
 
-        <div class="text-xl px-3 py-5 flex gap-4 items-center">
+        <div class="text-xl px-3 py-5 flex flex-col md:flex-row gap-4 items-start md:items-center">
           <p>Numero di domande :</p>
-          <For each={[5, 10, 20, 30, 40, 50]}>
-            {(num) => (
-              <div class="flex gap-2 items-center">
-                {num}
-                <Show when={numOfQuestions() === num}><FaRegularCircleDot /></Show>
-                <Show when={numOfQuestions() !== num}>
-                  <FaRegularCircle
-                    class="hover:cursor-pointer"
-                    onClick={() => setNumOfQuestions(num)} />
-                </Show>
-              </div>
-            )}
-          </For>
+          <div class="flex items-center gap-4">
+            <For each={[5, 10, 20, 30, 40, 50]}>
+              {(num) => (
+                <div class="flex items-center gap-1">
+                  <span>{num}</span>
+                  <Show when={numOfQuestions() === num}><FaRegularCircleDot /></Show>
+                  <Show when={numOfQuestions() !== num}>
+                    <FaRegularCircle
+                      class="hover:cursor-pointer"
+                      onClick={() => setNumOfQuestions(num)} />
+                  </Show>
+                </div>
+              )}
+            </For>
+          </div>
         </div>
 
         <For each={quizQuestions}>
