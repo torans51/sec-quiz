@@ -4,7 +4,7 @@ import { FaRegularCircleDot, FaRegularCircle } from 'solid-icons/fa'
 
 import { parseHTML, Question } from './quiz/parser';
 
-function shuffle(a: Array<Partial<Question>>): Array<Partial<Question>> {
+function shuffle<T>(a: Array<T>): Array<T> {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -13,11 +13,11 @@ function shuffle(a: Array<Partial<Question>>): Array<Partial<Question>> {
 }
 
 const questions = parseHTML()
+const initQuizQuestions = shuffleQuestions(questions, 5)
 
 const [numOfQuestions, setNumOfQuestions] = createSignal<number>(5)
-const [quizQuestions, setQuizQuestions] = createStore<Partial<Question>[]>(shuffle(questions).slice(0, numOfQuestions()))
-// key questionId, value selectedChoiceId
-const [answers, setAnswer] = createStore<Record<number, number>>({})
+const [quizQuestions, setQuizQuestions] = createStore<Partial<Question>[]>(initQuizQuestions)
+const [answers, setAnswers] = createStore<Record<number, number>>({})
 const [viewResult, setViewResult] = createSignal<boolean>(false)
 const [result, setResult] = createStore<{
   correct: number,
@@ -30,6 +30,15 @@ const [result, setResult] = createStore<{
   notAnswered: quizQuestions.length,
   successPercentage: 0
 })
+
+function shuffleQuestions(questions: Partial<Question>[], n: number): Partial<Question>[] {
+  return shuffle(questions)
+    .slice(0, n)
+    .map(q => {
+      q.choices = shuffle(q.choices ?? [])
+      return q
+    })
+}
 
 function computeResult() {
   let correct = 0;
@@ -58,7 +67,7 @@ function computeResult() {
 
 const App: Component = () => {
   createEffect(() => {
-    setQuizQuestions(shuffle(questions).slice(0, numOfQuestions()))
+    setQuizQuestions(shuffleQuestions(questions, numOfQuestions()))
   })
 
   return (
@@ -104,7 +113,7 @@ const App: Component = () => {
                       onClick={() => {
                         if (viewResult()) return
 
-                        setAnswer(question.id ?? 0, choice.id)
+                        setAnswers(question.id ?? 0, choice.id)
                       }}>
                       <div>
                         <Show when={choice.id === answers[question.id ?? 0]}><FaRegularCircleDot /></Show>
@@ -147,8 +156,8 @@ const App: Component = () => {
             <button class="px-6 py-4 text-2xl border rounded-md"
               onClick={() => {
                 setViewResult(false)
-                setAnswer({})
-                setQuizQuestions(shuffle(questions).slice(0, numOfQuestions()))
+                setAnswers({})
+                setQuizQuestions(shuffleQuestions(questions, numOfQuestions()))
                 window.scrollTo(0, 0)
               }}>
               Riprova
