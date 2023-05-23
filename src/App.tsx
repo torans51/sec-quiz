@@ -158,7 +158,9 @@ const App: Component = () => {
             <button class="px-6 py-4 text-2xl border rounded-md"
               onClick={() => {
                 setViewResult(false)
-                setAnswers({})
+                for (const k in answers) {
+                  setAnswers(parseInt(k), 0)
+                }
                 setQuizQuestions(shuffleQuestions(questions, numOfQuestions()))
                 window.scrollTo(0, 0)
               }}>
